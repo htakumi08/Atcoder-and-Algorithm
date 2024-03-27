@@ -16,3 +16,6 @@ with open("HandInput.txt") as TxtOpen:
     INPUT=TxtOpen.read() 
 sys.stdin=io.StringIO(INPUT)
 # --------------------------------------------------------
+N,K = map(int,input().split())
+A = list(map(int,input().split))
+
