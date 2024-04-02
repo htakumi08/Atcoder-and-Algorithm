@@ -16,27 +16,29 @@ with open("HandInput.txt") as TxtOpen:
     INPUT=TxtOpen.read() 
 sys.stdin=io.StringIO(INPUT)
 # --------------------------------------------------------
-H, W = map(int, input().split())
-X = [0] * (H)
-Z = [[0]*(W + 1) for i in range(H+1) ]
-for i in range(H):
-	X[i] = list(map(int, input().split()))
+N = int(input())
+A = list(map(int,input().split()))
+B = list(map(int,input().split()))
 
+# 動的計画法
+dp = [0]*(N+1)
+dp[2] = A[0]
+for i in range(3,N+1):
+    dp[i] = min(dp[i-1]+A[i-2], dp[i-2]+B[i-3])
 
-Q = int(input())
-A,B,C,D = [0]*Q,[0]*Q,[0]*Q,[0]*Q
-for i in range(Q):
-    A[i],B[i],C[i],D[i] = map(int,input().split())
+# 答えの復縁
+# 変数placeは現在位置(ゴールから逆算してく)
+ans = []
+place = N
+while True:
+    ans.append(place)
+    if place == 1:
+        break
+    if dp[place] == dp[place-1]+A[place-2]:
+        place -= 1
+    else:
+        place -= 2
+ans.reverse()
 
-# 横方向に累積和
-for i in range(1,H+1):
-     for j in range(1,W+1):
-        Z[i][j] = Z[i][j-1] + X[i-1][j-1]
-
-# 縦方向に累積和
-for i in range(1,W+1):
-    for j in range(1,H+1):
-        Z[j][i] = Z[j-1][i] + Z[j][i]
-
-for i in range(Q):
-     print(Z[C[i]][D[i]] + Z[A[i]-1][B[i]-1] - Z[A[i]-1][D[i]] - Z[C[i]][B[i]-1])
+print(len(ans))
+print(*ans)
