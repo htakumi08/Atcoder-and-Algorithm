@@ -16,29 +16,29 @@ with open("HandInput.txt") as TxtOpen:
     INPUT=TxtOpen.read() 
 sys.stdin=io.StringIO(INPUT)
 # --------------------------------------------------------
-N = int(input())
-A = list(map(int,input().split()))
-B = list(map(int,input().split()))
+N,A,B = map(int,input().split())
+D = list(map(int,input().split()))
+week = A+B
+# 余りを考えて、1週間分に落とし込む
+for i in range(N):
+    D[i] = D[i]%week
+D.sort()
+# 2週分考える
+# 連続するサイクルをシュミレートする
+for i in range(N):
+    D.append(D[i]+week)
 
-# 動的計画法
-dp = [0]*(N+1)
-dp[2] = A[0]
-for i in range(3,N+1):
-    dp[i] = min(dp[i-1]+A[i-2], dp[i-2]+B[i-3])
+# N個の予定が休日の範囲に収まるかどうか調べる
+tmp = float('inf')
+for i in range(N):
+    tmp = min(tmp,D[i+N-1]-D[i]+1)
+print('Yes' if tmp <= A else 'No')
 
-# 答えの復縁
-# 変数placeは現在位置(ゴールから逆算してく)
-ans = []
-place = N
-while True:
-    ans.append(place)
-    if place == 1:
-        break
-    if dp[place] == dp[place-1]+A[place-2]:
-        place -= 1
-    else:
-        place -= 2
-ans.reverse()
 
-print(len(ans))
-print(*ans)
+
+# result = True
+# for i in range(N):
+#     if A < (D[i]%week) or D[i]%week == 0:
+#         result = False
+#         break
+# print('Yes' if result else 'No')
