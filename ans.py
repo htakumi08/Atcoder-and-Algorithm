@@ -13,16 +13,29 @@ from collections import Counter
 import io,sys,os
 # "abc...xyz"
 from string import ascii_lowercase 
+# sortされた各データ構造を作るモジュールsortedcontainers
+from sortedcontainers import SortedDict,SortedList,SortedSet
 os.system("clear")
 with open("HandInput.txt") as TxtOpen:
     INPUT=TxtOpen.read() 
 sys.stdin=io.StringIO(INPUT)
 # --------------------------------------------------------
-N,M = map(int,input().split())
-A = list(map(int,input().split()))
-A.sort()
+def count_black_cells(A, B, C, D):
+    def count_in_rectangle(x1, y1, x2, y2):
+        """特定の矩形範囲で黒マスの数を計算する関数"""
+        count = 0
+        for x in range(x1, x2+1):
+            for y in range(y1, y2+1):
+                if (x + y) % 2 == 0:  # 黒マスの条件
+                    count += 1
+        return count
+    
+    # 全体の黒マスを計算
+    total_black = count_in_rectangle(A, B, C, D)
+    return total_black
 
-ans = 0
-for i in range(N):
-   ans = max(ans, bisect.bisect_left(A,A[i]+M) - i) 
-print(ans)
+# ユーザー入力を取得
+A, B, C, D = map(int, input().split())
+
+# 結果の出力
+print(count_black_cells(A, B, C, D))
